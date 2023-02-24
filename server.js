@@ -1,9 +1,9 @@
-const mysql = require("mysql");
+//Dependencies packages
 const inquirer = require("inquirer");
-const cTable = require("console.table");
-const CFonts = require("cfonts");
-const { render } = require("cfonts");
+const mysql = require("mysql2");
+require("console.table");
 
+//Local Connection to MySQL for database
 var connection = mysql.createConnection({
   host: "localhost",
   port: 3306,
@@ -12,25 +12,13 @@ var connection = mysql.createConnection({
   database: "lafamiglia_db",
 });
 
+//When connected use cfonts as a header and then go to the main function to prompt users
 connection.connect(function (err) {
   if (err) throw err;
-  CFonts.say("Welcome|to the|Family", {
-    font: "block",
-    align: "center",
-    colors: ["red", "cyan"],
-    background: "transparent",
-    letterSpacing: 1,
-    lineHeight: 1,
-    space: true,
-    maxLength: "10",
-    gradient: false,
-    independentGradient: false,
-    transitionGradient: false,
-    env: "node",
-  });
   promptUser();
 });
 
+//Main Menu of Employee Manager, asks questions then divert to appropriate function
 function promptUser() {
   inquirer
     .prompt([
@@ -86,13 +74,13 @@ function promptUser() {
           break;
 
         case "Done!":
-          missionComplete();
+          mainMenu();
           break;
       }
     });
 }
 
-
+//function to view all employees, departments, and roles
 function viewAll() {
   let query =
     "SELECT employee.first_name, employee.last_name, roles.title, departments.id, employee.salary";
@@ -106,7 +94,7 @@ function viewAll() {
   });
 }
 
-
+//function to view all roles
 function viewRoles() {
   let query = "SELECT roles.title FROM roles;";
   connection.query(query, function (err, res) {
@@ -116,6 +104,7 @@ function viewRoles() {
   });
 }
 
+//function to view all departments
 function viewByDepartment() {
   let query = "SELECT * FROM departments;";
   connection.query(query, function (err, res) {
@@ -157,50 +146,55 @@ function addDepartment() {
 }
 
 //function to add roles to db
-function addRole(){
+function addRole() {
   let departmentArr = [];
   let departmentQuery = "SELECT * FROM departments;";
-  connection.query(departmentQuery, function (err, res){
-      if (err) throw err;
-      for (i = 0; i < res.length; i++){
-          departmentArr.push(res[i].department_name)
-      }
-  let query = "SELECT roles.title";
-  query += " FROM roles INNER JOIN departments ON (roles.department_id = departments.id);";
-  connection.query(query, function (err, res){
+  connection.query(departmentQuery, function (err, res) {
+    if (err) throw err;
+    for (i = 0; i < res.length; i++) {
+      departmentArr.push(res[i].department_name);
+    }
+    let query = "SELECT roles.title";
+    query +=
+      " FROM roles INNER JOIN departments ON (roles.department_id = departments.id);";
+    connection.query(query, function (err, res) {
       if (err) throw err;
       console.table(res);
-      inquirer.prompt([
+      inquirer
+        .prompt([
           {
-              type: 'input',
-              message: 'What is the name of the role you want to add?',
-              name: "newrole"
+            type: "input",
+            message: "What is the name of the role you want to add?",
+            name: "newrole",
           },
           {
-              type: 'list',
-              message: 'What department does this role belong to?',
-              choices: departmentArr,
-              name: "newdepartment"
-          }
-      ]).then(function(response){
+            type: "list",
+            message: "What department does this role belong to?",
+            choices: departmentArr,
+            name: "newdepartment",
+          },
+        ])
+        .then(function (response) {
           let addDepartment = response.newdepartment;
           let addDepartmentId = departmentArr.indexOf(addDepartment);
           addDepartmentId++;
           console.log("Adding New Role...\n");
-          connection.query("INSERT INTO roles SET ?",
-          {
+          connection.query(
+            "INSERT INTO roles SET ?",
+            {
               title: response.newrole,
-              department_id: addDepartmentId
-          },
-          function (err, res){
+              department_id: addDepartmentId,
+            },
+            function (err, res) {
               if (err) throw err;
               console.log(res.affectedRows + " Role Created Succesfully\n");
               promptUser();
-          });
-      })
-  })
-  })
-};
+            }
+          );
+        });
+    });
+  });
+}
 
 //function to add employees to db
 function addEmployee() {
@@ -258,10 +252,10 @@ function addEmployee() {
   });
 }
 
+//function to delete an employee from the db
 function removeEmployee() {
   let employeeArr = [];
-  let query =
-    "SELECT employee.first_name, employee.last_name, departments.id";
+  let query = "SELECT employee.first_name, employee.last_name, departments.id";
   query +=
     " FROM employee INNER JOIN roles ON (employee.role_id = roles.id) INNER JOIN departments ON (roles.department_id = departments.id)";
   query += " ORDER BY employee.last_name";
@@ -277,7 +271,7 @@ function removeEmployee() {
           type: "list",
           message: "Which employee do you want to remove?",
           choices: employeeArr,
-          name: "last_name"
+          name: "last_name",
         },
       ])
       .then(function (response) {
@@ -291,6 +285,7 @@ function removeEmployee() {
   });
 }
 
+//function to update roles of employee
 function updateEmployeeRole() {
   let roleArr = [];
   let roleQuery = "SELECT roles.title FROM roles;";
@@ -353,7 +348,8 @@ function updateEmployeeRole() {
   });
 }
 
-function missionComplete() {
+//function to end program
+function mainMenu() {
   CFonts.say("ca va sans dire.", {
     font: "block",
     align: "left",
