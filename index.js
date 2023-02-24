@@ -92,7 +92,7 @@ function promptUser() {
     });
 }
 
-//function to view all employees, departments, and roles
+
 function viewAll() {
   let query =
     "SELECT employee.first_name, employee.last_name, roles.title, departments.id, employee.salary";
@@ -106,7 +106,7 @@ function viewAll() {
   });
 }
 
-//function to view all roles
+
 function viewRoles() {
   let query = "SELECT roles.title FROM roles;";
   connection.query(query, function (err, res) {
@@ -116,7 +116,6 @@ function viewRoles() {
   });
 }
 
-//function to view all departments
 function viewByDepartment() {
   let query = "SELECT * FROM departments;";
   connection.query(query, function (err, res) {
