@@ -350,19 +350,6 @@ function updateEmployeeRole() {
 
 //function to end program
 function mainMenu() {
-  CFonts.say("ca va sans dire.", {
-    font: "block",
-    align: "left",
-    colors: ["system"],
-    background: "transparent",
-    letterSpacing: 1,
-    lineHeight: 1,
-    space: true,
-    maxLength: "0",
-    gradient: false,
-    independentGradient: false,
-    transitionGradient: false,
-    env: "node",
-  });
+
   connection.end();
 }
