@@ -1,25 +1,17 @@
 {
-  "name": "stonecastle_manager_systems",
+  "name": "corleone",
   "version": "1.0.0",
-  "description": "mysql, inquirer, command line applocation",
-  "main": "server.js",
+  "description": "mysql",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/EM-T-Shells/stonecastle_manager_systems.git"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/EM-T-Shells/stonecastle_manager_systems/issues"
-  },
-  "homepage": "https://github.com/EM-T-Shells/stonecastle_manager_systems#readme",
   "dependencies": {
     "cfonts": "^3.1.1",
-    "sequelize": "^6.27.0"
+    "mysql": "^2.18.1",
+    "sequelize": "^6.29.0"
   }
 }
